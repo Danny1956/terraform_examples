@@ -8,3 +8,4 @@
 terraform.iml
 terraform.tfvars
 saved-plan
+.idea*
