@@ -1,0 +1,10 @@
+.terraform
+*.tfvars
+*.tfstate
+*.tfstate.backup
+*.tfstate.*.backup
+.terraform/
+.terraform_plugin_cache/
+terraform.iml
+terraform.tfvars
+saved-plan
