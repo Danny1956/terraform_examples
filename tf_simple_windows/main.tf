@@ -1,3 +1,12 @@
+/***********************************************************
+
+Simple windows tf creation
+Also creates an bucket
+
+
+***********************************************************/
+
+
 
 provider "aws"{
   region = "eu-west-1"
@@ -7,9 +16,9 @@ resource "aws_instance" "win-example" {
 
   instance_type = "t2.micro"
   key_name = "${var.private_key_name}"
-
-
-
+  #dependency below not necessary for windows, but want to
+  #be able to copy from it
+  depends_on = ["aws_s3_bucket_object.object"]
 
   user_data = <<EOF
 
@@ -43,6 +52,24 @@ EOF
     user = "${var.admin-username}"
     password = "${var.admin-password}"
   }
+}
+
+/************************************************************
+create and copy small local file to s3
+bucket
+
+
+*************************************************************/
+
+resource "aws_s3_bucket" "bucket1" {
+  bucket = "${var.bucket_name}"
+}
+
+resource "aws_s3_bucket_object" "object" {
+  bucket = "${var.bucket_name}"
+  key = "${var.bucket_key}"
+  source = "${var.source_file}"
+  depends_on = ["aws_s3_bucket.bucket1"]
 }
 
 
