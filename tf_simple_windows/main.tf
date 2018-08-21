@@ -3,6 +3,8 @@
 Simple windows tf creation
 Also creates an bucket
 
+remember to d/l and install ec2config on ec2 windows
+client to invoke start up scripts at boot time.
 
 ***********************************************************/
 
@@ -31,17 +33,26 @@ resource "aws_instance" "win-example" {
   </script>
 
  <powershell>
+    start-transcript ${var.TranscriptFile}
+
+    ## md ${var.temp_dir}
+    ## cd ${var.temp_dir}
+
+    ## echo "hello" > ${var.temp_dir} + "\" + ${var.hello_txt_file}
+
     md c:\temp
-    cd c:\temp
-    echo "hello" > c:\temp\sfsdfd.txt
+    $file = "c:\temp\"+ (Get-Date).ToString("MM-dd-yy-hh-mm")
+    New-Item $file -ItemType file
+
     netsh advfirewall firewall add rule name=”WinRM 5985″ protocol=TCP dir=in localport=5985 action=allow
     netsh advfirewall firewall add rule name=”WinRM 5986″ protocol=TCP dir=in localport=5986 action=allow
     net user ${var.admin-username} ${var.admin-username} /add /y
     net localgroup administrators ${var.admin-username} /add
     md ${var.ps_logs_dir}
     cd ${var.ps_logs_dir}
-    start-transcript ${var.TranscriptFile}
-
+    # create a test file
+    $file = "c:\temp
+    stop-transcript
 </powershell>
 EOF
 
