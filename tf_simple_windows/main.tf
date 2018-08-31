@@ -35,10 +35,10 @@ resource "aws_instance" "win-example" {
  <powershell>
     start-transcript ${var.TranscriptFile}
 
-    ## md ${var.temp_dir}
-    ## cd ${var.temp_dir}
+    md ${var.temp_dir}
+    cd ${var.temp_dir}
 
-    ## echo "hello" > ${var.temp_dir} + "\" + ${var.hello_txt_file}
+    echo "hello" > ${var.temp_dir} + "\" + ${var.hello_txt_file}
 
     md c:\temp
     $file = "c:\temp\"+ (Get-Date).ToString("MM-dd-yy-hh-mm")
