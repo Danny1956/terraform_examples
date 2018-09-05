@@ -66,13 +66,15 @@ resource "aws_instance" "winrm" {
     <powershell>
     net user ${var.admin-username} ${var.admin-password} /add /y
     net localgroup administrators ${var.admin-username} /add
-
-  $file = $env:SystemRoot + "\Temp\" + (Get-Date).ToString("MM-dd-yy-hh-mm")
-  New-Item $file -ItemType file
+    net localgroup "remote management users" ${var.admin-username} /add
+  
+    $file = $env:SystemRoot + "\Temp\" + (Get-Date).ToString("MM-dd-yy-hh-mm")
+    New-Item $file -ItemType file
 
     netsh advfirewall firewall add rule name=”WinRM 5985″ protocol=TCP dir=in localport=5985 action=allow
     netsh advfirewall firewall add rule name=”WinRM 5986″ protocol=TCP dir=in localport=5986 action=allow
-
+    #Set-NetFirewallRule -Name “WINRM-HTTP-In-TCP-PUBLIC” -RemoteAddress “Any”
+    
     net stop winrm
     sc.exe config winrm start=auto
     net start winrm
@@ -89,4 +91,6 @@ resource "aws_instance" "winrm" {
   }
 }
 
-
+output "aws_instance_public_ip"{
+  value = "${aws_instance.winrm.public_dns}"
+  }
