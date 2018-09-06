@@ -9,7 +9,7 @@ client to invoke start up scripts at boot time.
 
 ***********************************************************/
 
-provider "aws"{
+provider "aws" {
   region = "${var.aws_region}"
 }
 
@@ -34,9 +34,6 @@ resource "aws_security_group" "default" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-
-
-
   # outbound internet access
   egress {
     from_port   = 0
@@ -46,12 +43,12 @@ resource "aws_security_group" "default" {
   }
 }
 
-
 resource "aws_instance" "winrm" {
-  ami = "${lookup(var.win_amis,var.aws_region)}"
-  instance_type = "t2.micro"
-  key_name = "${var.private_key_name}"
+  ami             = "${lookup(var.win_amis,var.aws_region)}"
+  instance_type   = "t2.micro"
+  key_name        = "${var.private_key_name}"
   security_groups = ["${aws_security_group.default.name}"]
+
   user_data = <<EOF
    <script>
     winrm quickconfig -q
@@ -82,15 +79,14 @@ resource "aws_instance" "winrm" {
 
   EOF
 
-
   connection {
-    type = "winrm"
-    timeout = "10m"
-    user = "${var.admin-username}"
+    type     = "winrm"
+    timeout  = "10m"
+    user     = "${var.admin-username}"
     password = "${var.admin-password}"
   }
 }
 
-output "aws_instance_public_ip"{
+output "aws_instance_public_ip" {
   value = "${aws_instance.winrm.public_dns}"
-  }
+}
