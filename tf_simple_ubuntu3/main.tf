@@ -10,7 +10,7 @@ resource "aws_instance" "simple-ubuntu" {
   ami           = "ami-0181f8d9b6f098ec4"
   instance_type = "t2.micro"
   key_name      = "${var.keyname}"
-  subnet_id = "subnet-0b41eb6f"
+  subnet_id = "${var.subnet_name}"
 
   connection {
     type        = "ssh"

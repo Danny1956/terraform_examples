@@ -15,3 +15,7 @@ variable "private_key_path" {}
 variable "user_name" {
   default = "ubuntu"
 }
+
+variable "subnet_name"{
+  default = ""
+}
