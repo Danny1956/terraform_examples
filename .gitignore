@@ -10,3 +10,9 @@ terraform.tfvars
 saved-plan
 .idea*
 *.old
+terraform_ec2_nginx/credentials
+tf_s3_windows_ps/.vscode/
+tf_s3_windows_ps/iam.tf
+tf_simple_windows3/
+
+

@@ -48,7 +48,7 @@ resource "aws_instance" "winrm" {
   instance_type   = "t2.micro"
   key_name        = "${var.private_key_name}"
   security_groups = ["${aws_security_group.default.name}"]
-
+  iam_instance_profile = "${aws_iam_instance_profile.ec2-role.name}"
   user_data = <<EOF
    <script>
     winrm quickconfig -q
@@ -75,6 +75,17 @@ resource "aws_instance" "winrm" {
     net stop winrm
     sc.exe config winrm start=auto
     net start winrm
+
+    # install powershell stuff
+    Add-Type -Path "C:\Program Files (x86)\AWS SDK for .NET\past-releases\Version-2\Net45\AWSSDK.dll"
+    Import-Module "C:\Program Files (x86)\AWS Tools\PowerShell\AWSPowerShell\AWSPowerShell.psd1"
+    $S3Client=[Amazon.AWSClientFactory]::CreateAmazonS3Client
+    mkdir "c:\temp"
+    $objects = Get-S3Object -BucketName danny1956-test-bucket
+    foreach ($object in $objects){Copy-S3Object -BucketName danny1956-test-bucket -key $object.Key -LocalFile c:\temp\test.zip}
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    [System.IO.Compression.ZipFile]::ExtractToDirectory([string]"c:\temp\test.zip", [string]"c:\temp")
+
     </powershell>
 
   EOF
